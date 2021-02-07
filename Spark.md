@@ -28,20 +28,20 @@ Spark GraphX 是 Spark 面向图计算提供的框架与算法库。
 
 File->Settings->Plugins
 
-![image-20210207093414490](C:\Users\starry\Desktop\scala-1.png)
+![scala-1](https://github.com/ZjutBPO/Back_End/blob/master/Spark-img/scala-1.png)
 
 添加sdk
 
 File->Project Structure->Global Libraries
 
-![image-20210207093715828](C:\Users\starry\Desktop\scala-2.png)
+![scala-2](https://github.com/ZjutBPO/Back_End/blob/master/Spark-img/scala-2.png)
 
 3、测试环境
 
 spark-core->src->main->java
 
-![image-20210207095007210](C:\Users\starry\Desktop\test-1.png)
+![test-1](https://github.com/ZjutBPO/Back_End/blob/master/Spark-img/test-1.png)
 
-![image-20210207095037894](C:\Users\starry\Desktop\test-2.png)
+![test-2](https://github.com/ZjutBPO/Back_End/blob/master/Spark-img/test-2.png)
 
 可以输出 Hello Spark证明搭建成功
