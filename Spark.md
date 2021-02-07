@@ -50,7 +50,7 @@ spark-core->src->main->java
 
 统计单词数量的思路图
 
-![wordcount思路](.\Spark-img\wordcount思路.png)
+![wordcount思路](./Spark-img/wordcount思路.png)
 
 #### 具体实现
 
@@ -111,4 +111,4 @@ object Spark01_WordCount {
 
 输出结果：
 
-![image-20210207165839459](D:\git\Back_End\Spark-img\image-20210207165839459.png)
+![image-20210207165839459]./Spark-img/image-20210207165839459.png)
