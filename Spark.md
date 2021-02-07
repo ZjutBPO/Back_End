@@ -4,7 +4,7 @@
 
 #### spark内置模块
 
-![spark内置模块](C:\Users\starry\Desktop\spark内置模块.png)
+![spark内置模块](https://github.com/ZjutBPO/Back_End/blob/master/Spark-img/spark%E5%86%85%E7%BD%AE%E6%A8%A1%E5%9D%97.png)
 
 Spark Core 中提供了 Spark 最基础与最核心的功能，Spark 其他的功能都是在 Spark Core 的基础上进行扩展的。
 
