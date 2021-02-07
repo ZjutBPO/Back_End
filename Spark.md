@@ -50,7 +50,7 @@ spark-core->src->main->java
 
 统计单词数量的思路图
 
-![wordcount思路](.\Spark-img\wordcount思路.png)
+![wordcount思路](./Spark-img/wordcount思路.png)
 
 #### 具体实现
 
@@ -109,6 +109,7 @@ object Spark03_WordCount {
 输出结果：
 
 ![image-20210207165839459](./Spark-img/image-20210207165839459.png)
+<<<<<<< HEAD
 
 #### 处理日志信息
 
@@ -135,3 +136,5 @@ log4j.logger.parquet=ERROR
 log4j.logger.org.apache.hadoop.hive.metastore.RetryingHMSHandler=FATAL
 log4j.logger.org.apache.hadoop.hive.ql.exec.FunctionRegistry=ERROR
 ```
+=======
+>>>>>>> 79a0e6e3ccf68024556e946819afa54f088d3926
