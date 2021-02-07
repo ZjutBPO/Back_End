@@ -14,17 +14,9 @@ sudo cat /etc/shells 可以看见六种shell解析器
 
 /bin/csh  
 
-ubuntu系统默认的解析器是/bin/bash
+系统默认的解析器 
 
-
-
-**Shell脚本入门**
-
-​	#!/bin/bash开头（指定解析器）
-
-​	echo “helloworld” **输出**
-
-​	
+定义自变量  
 
 # Hbase
 
