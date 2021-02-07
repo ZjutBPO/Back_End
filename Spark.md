@@ -78,30 +78,27 @@ spark-core->src->main->java
 package com.spark.core.wc
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
-object Spark01_WordCount {
+object Spark03_WordCount {
   def main(args: Array[String]): Unit = {
-    //Application
-    //Spark框架
-    // TODO 建立和Spark框架的链接
+    // TODO 建立和Spark框架的连接
     // setMaster：设置环境 local：本地环境
     val sparConf = new SparkConf().setMaster("local").setAppName("WordCount")
     val sc = new SparkContext(sparConf)
     // TODO 执行业务操作
-    // 1.读取文件，获取一行一行的数据
-    var lines: RDD[String] = sc.textFile("data/*")
+    // 1.读取文件数据
+    val lines: RDD[String] = sc.textFile("data/*")
     // 2.拆分为单词(扁平化操作)
-    var words: RDD[String] = lines.flatMap(_.split(" "))
-    // 3.将数据根据单词进行分组，便于统计
-    // String:分组的key Iterable[String]:可迭代的集合
-    var wordGroup: RDD[(String,Iterable[String])] = words.groupBy(word=>word)
-    // 4.对分组后的数据进行转换
-    var wordToCount = wordGroup.map{
-      case (word,list) => {
-        (word,list.size)
-      }
-    }
-    // 5.打印转换结果
-    var array:Array[(String,Int)] = wordToCount.collect()
+    val words: RDD[String] = lines.flatMap(_.split(" "))
+    // 3.转换数据结构
+    val wordToOne = words.map(
+      word=>(word,1)
+    )
+    // 4. 按照相同单词分组聚合
+    // Spark框架可将分组和聚合使用一个方法实现
+    // reduceByKey:相同的key数据，可以对value进行reduce聚合
+    val wordToCount = wordToOne.reduceByKey(_ + _)
+    // 5.打印结果
+    val array:Array[(String,Int)] = wordToCount.collect()
     array.foreach(println)
     // TODO 关闭连接
     sc.stop()
@@ -111,4 +108,30 @@ object Spark01_WordCount {
 
 输出结果：
 
-![image-20210207165839459](D:\git\Back_End\Spark-img\image-20210207165839459.png)
+![image-20210207165839459](./Spark-img/image-20210207165839459.png)
+
+#### 处理日志信息
+
+在resource目录中创建 log4j.properties 文件，使其只显示error信息和结果
+
+```
+log4j.rootCategory=ERROR, console
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.target=System.err
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n
+# Set the default spark-shell log level to ERROR. When running the spark-shell,the
+# log level for this class is used to overwrite the root logger's log level, sothat
+# the user can have different defaults for the shell and regular Spark apps.
+log4j.logger.org.apache.spark.repl.Main=ERROR
+# Settings to quiet third party logs that are too verbose
+log4j.logger.org.spark_project.jetty=ERROR
+log4j.logger.org.spark_project.jetty.util.component.AbstractLifeCycle=ERROR
+log4j.logger.org.apache.spark.repl.SparkIMain$exprTyper=ERROR
+log4j.logger.org.apache.spark.repl.SparkILoop$SparkILoopInterpreter=ERROR
+log4j.logger.org.apache.parquet=ERROR
+log4j.logger.parquet=ERROR
+# SPARK-9183: Settings to avoid annoying messages when looking up nonexistent UDFs in SparkSQL with Hive support
+log4j.logger.org.apache.hadoop.hive.metastore.RetryingHMSHandler=FATAL
+log4j.logger.org.apache.hadoop.hive.ql.exec.FunctionRegistry=ERROR
+```
