@@ -204,6 +204,26 @@ vim 文件名进入编辑	遇到读写问题可以直接加sudo
 
 ​	funname
 
+![image-20210213002406383](Hbase.assets/image-20210213002406383.png)
+
+## Shell工具
+
+### cut
+
+​	剪切数据
+
+​	基本用法：cut[选项参数]	filename
+
+​	默认用tab分隔
+
+​	选项参数 -f 列号，提取第几列 -d 分隔符，按照指定分隔符分割列
+
+​	截取ip地址
+
+![image-20210213010236752](Hbase.assets/image-20210213010236752.png)
+
+### sed
+
 
 
 # Hbase
