@@ -284,13 +284,13 @@ sort(选项)(参数)
 
 Row Key按照字典序排列
 
-**Region**横向切片  
+
 
 **Store**存储数据块的部分
 
 纵向切分出的是不同的列族，横向切分出的是表的切片内容
 
-**物理存储结构**
+### **物理存储结构**
 
 ![image-20210206114530625](Hbase.assets/image-20210206114530625.png)
 
@@ -298,7 +298,59 @@ Row Key按照字典序排列
 
 正常状态的数据标记为put，而面对时间戳更大的Delete类型，则该行早于delete状态时间的数据都不返回数据
 
-数据模型
+### **数据模型**
 
-## HBase部署安装 
+**Name Space**
 
+​	命名空间，类似普通数据库database概念，每个命名空间下有多个表，Hbase下有两个自带的命名空间hbase和default，hbase存放HBase内置的表，default表是用户默认使用的命名空间
+
+**Region**横向切片  
+
+​	类似普通数据库表的概念，但是HBase定义表时只需要声明列族，不需要声明列，说明字段可以动态、按需指定。
+
+**Row**
+	每行数据又一个RowKey和多个Column列组成，数据按照RowKey字典序存储，并且查询数据时只能根据RowKey进行检索
+
+**Column**
+
+​	HBase中的每个列都是列族（column family）和列限定符（column qualifier）进行限定，建表时只需要实现定义列族
+
+**Time Stamp**
+
+​	用来标识数据的不同版本（version），数据写入的时候如果不指定时间戳，会自动为其加上该字段，自动填充当前时间
+
+**Cell**
+
+​	由{rowkey，column family：column qualifier ,timestamp}唯一确定的一个单元，cell中的数据是没有类型的，由字节码形式存贮
+
+### HBase基本架构
+
+**RegionServer作用**
+
+Data:get,put(add&&modify）,delete
+
+Region：splitRegion（切分表），compactRegion（合并表）
+
+**Master Zookeeper**
+
+zookeeper帮助Master管理
+
+Master管理表结构ddl，zookeeper管理dml
+
+**Table**：create,delete,alter
+
+**RegionServer**:分配到regions到每个RegionServer，监控每个RS的状态，底层对数据的增删改查，master是管理高层级的增删改查（表）
+
+多个master，源数据由中间件保存
+
+![image-20210214152711926](Hbase.assets/image-20210214152711926.png)
+
+
+
+## HBase部署安装 （伪分布式）
+
+学习阶段是在win10下的linux子系统安装
+
+准备环境：java，hadoop
+
+第一步，hbase安装包下载（http://hbase.apache.org/）
