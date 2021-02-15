@@ -274,6 +274,63 @@ sort(选项)(参数)
 
 -k 指定需要排序的列
 
+# Hadoop
+
+​	**优势**
+
+​		高可靠性
+
+​		高扩展性
+
+​		高效性
+
+​		高容错性
+
+​	**组成**
+
+​		MapReduce 计算
+
+​		Yarn资源调度
+
+​		HDFS数字存储
+
+​		Common 辅助工具
+
+​	**HDFS架构概述**
+
+​		NameNode（nn）存储文件的元数据，文件目录
+
+​		DataNode 本地文件系统存储文件块数据和快数据的校验和
+
+​		Secondary NameNode 用来监控HDFS状态的辅助后台程序
+
+​	**YARN架构概述**
+
+​		ResourceManager用于处理客户端请求，监控NodeManager，启动或监控	ApplicationMaster，资源分配与调度
+
+​		NodeManager用于管理节点上的资源，处理来自RM的命令。处理来自AM的命令
+​		ApplicationMaster负责数据的切分，为应用程序申请资源并分配给内部的任务，任务的监控与容错
+
+​		Container分装了某节点上的多维度资源如内存、cpu、磁盘、网络
+
+​	**MapReduce架构概述**
+
+​		将计算过程分为Map和Reduce
+
+​		Map并行处理输入数据
+
+​		Reduce对Map结果进行汇总
+
+## 运行环境搭建
+
+## 		
+
+# Zookeeper
+
+​	为分布式应用提供协调服务
+
+​	
+
 # Hbase
 
 ## HBase数据模型
