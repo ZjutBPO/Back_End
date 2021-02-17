@@ -323,11 +323,31 @@ sort(选项)(参数)
 
 ## 运行环境搭建
 
-## 		
+​	https://blog.csdn.net/yps_leaf/article/details/104467624/
+
+## Hadoop目录
+
+​	**bin**存放hadoop相关服务进行操作的脚本
+
+​	**etc**存放hadoop的配置文件
+
+​	**lib**存放hadoop本地库，可以进行压缩解压功能
+
+​	**sbin**存放启动和停止hadoop相关服务的脚本
+
+​	**share**存放依赖jar包、文档、官方案例
+
+## hadoop运行模式
+
+有本地模式、伪分布式、完全分布式模式
+
+### 伪分布式
+
+
 
 # Zookeeper
 
-​	为分布式应用提供协调服务
+​	为分布式应用提供协调服务	
 
 ​	
 
