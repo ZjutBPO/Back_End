@@ -339,13 +339,49 @@ sort(选项)(参数)
 
 ## hadoop运行模式
 
-有本地模式、伪分布式、完全分布式模式
+​	有本地模式、伪分布式、完全分布式模式
 
 ### 伪分布式
 
+1. ​	启动HDFS运行MapReduce，测试集群增、删、查，运行wordcount测试
 
+​	集群增删查：
 
-# Zookeeper
+​		启动集群后启动namenode和datanode
+
+​		可以在web端查看hdfs文件系统（http://hadoop101:50070/dfshealth.html#tab-overview）
+
+​		创建文件夹input 在hadoop文件目录下输入命令bin/hafs dfs -mkdir -p /user/ub1/input
+
+​		上传文件命令 bin/hdfs dfs -put **wcinput/wc.input**
+
+[^wcinput/wc.input是本地文件夹的文件]: 
+
+ /user/ub1/input
+
+​		运行wordcount程序测试bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.5.jar wordcount    /user/ub1/input/    /user/ub1/output
+
+​	
+
+​	2.	启动yarn运行MapReduce，测试集群增删查，运行wordcount测试
+
+​	配置完环境之后，启动了namenode和datanode的前提下启动ResourceManager和NodeManager(sbin/yarn0daemon.sh start resource/nodemanager)
+
+​	执行MapReduce如1hdfs中的操作
+
+​	查看结果bin/hdfs dfs -cat /user/ub1/output/*
+
+ 3. 配置历史服务器
+
+    配置mapred-site.xml(位于etc)
+
+    启动(sbin/mr0jobhistory-daemon.sh start historyserver)
+
+ 4. 配置日志的聚集
+
+    **日志聚集**的概念：应用运行完成后，将程序运行日志信息上传到HDFS系统上，以便方便的查看到程序运行详情
+
+    查看地址(hadoop101:19888/jobhistory)
 
 ​	为分布式应用提供协调服务	
 
@@ -431,3 +467,4 @@ Master管理表结构ddl，zookeeper管理dml
 准备环境：java，hadoop
 
 第一步，hbase安装包下载（http://hbase.apache.org/）
+
