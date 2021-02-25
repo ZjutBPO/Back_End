@@ -385,7 +385,151 @@ sort(选项)(参数)
 
 ​	为分布式应用提供协调服务	
 
-​	
+# Zookeeper
+
+​	为分布式应用提供协调服务
+
+​	![image-20210220001426018](Hbase.assets/image-20210220001426018.png)
+
+zookeeper存下大家都需要的数据，比如服务器的节点信息，在线状态，服务器发生变化及时通知客户端获取信息
+
+## 特点
+
+​	zookeeper是由一个leader，多个follower组成的
+
+​	集群中有半数以上节点存活，zookeeper集群就能正常工作
+
+​	全局数据一致，每个server保存一份相同的数据副本，Client无论连上哪个，数据都一致
+
+​	更新请求按照顺序，来自同一个client的请求按照发送的顺序执行
+
+## 数据结构
+
+​	类似unix文件系统（/.../.../...），每个节点存1MB，每个节点可以通过路径唯一标识
+
+## 应用场景
+
+​	**统一命名服务**：对应用服务统一命名，便于识别，例如用域名代替IP
+
+​	**统一配置管理**：一般要求一个集群中所有配置信息一致，修改后快速同步，可以将配置信息写入ZK中的Znode，每个客户端监听这个Znode，发生修改后及时通知
+
+​	**统一集群管理**：实时掌握每个节点状态，监听Znode
+
+​	**服务器动态上下线**：通知客户端服务器节点上下线
+
+​	**软负载均衡**：记录每台服务器访问数，让访问数最少的服务器处理最新的访客
+
+## 内部原理
+
+​	**半数机制**：有一半以上机器存活集群可用，所以zookeeper可以安装奇数台服务器
+
+​	工作时会选取一个leader节点，剩余的为follower，leader是通过内部选举机制临时产生的
+
+## 安装部署
+
+安装一个secureCRT软件用来连接三台服务器，方便操作
+
+**本地安装**（就是一台服务器安装）
+
+1. 下载解压zookeeper到随便一个目录下，我选了/usr/local/
+2. 将conf目录下的zoo_sample.cfg改为zoo.cfg，并修改其中的dataDir=$pwd/zkData(自己创建的文件夹)
+3. bin/zkServer.sh start启动服务器 jps查看是否启动
+4. bin/zkServer.sh status查看状态
+5. bin/zkCli.sh 启动客户端
+6. quit退出客户端
+7. bin/zkServer.sh stop停止zookeeper
+
+**分布式安装**（三台服务器一起配置集群）
+
+1. 参照本地安装在三台服务器上配置好基础内容并测试
+
+2. 配置服务器编号，在本地安装时创建的zkData下创建文件myid，分别编号2、3、4
+
+3. 配置zoo.cfg，添加集群信息如下
+
+4. server.2=hadoop102:2888:3888
+
+   server.3=hadoop103:2888:3888
+
+   server.4=hadoop104:2888:3888
+
+   其中本地ip使用0.0.0.0，比如在hadoop102配置时，server.2使用的就是server.2=0.0.0.0:2888:3888
+
+5. 分别启动三台机器的zk，查看状态，可以看见leader机型和follow机型
+
+
+
+## 编程应用
+
+1. 创建maven工程，添加pom依赖文件
+
+   ```
+   <dependencies>
+   		<dependency>
+   			<groupId>junit</groupId>
+   			<artifactId>junit</artifactId>
+   			<version>RELEASE</version>
+   		</dependency>
+   		<dependency>
+   			<groupId>org.apache.logging.log4j</groupId>
+   			<artifactId>log4j-core</artifactId>
+   			<version>2.8.2</version>
+   		</dependency>
+   		<!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
+   		<dependency>
+   			<groupId>org.apache.zookeeper</groupId>
+   			<artifactId>zookeeper</artifactId>
+   			<version>3.4.10</version>
+   		</dependency>
+   </dependencies>
+   
+   ```
+
+2. 拷贝log4j.properties到resource目录下
+
+   ```
+   log4j.rootLogger=INFO, stdout  
+   log4j.appender.stdout=org.apache.log4j.ConsoleAppender  
+   log4j.appender.stdout.layout=org.apache.log4j.PatternLayout  
+   log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n  
+   log4j.appender.logfile=org.apache.log4j.FileAppender  
+   log4j.appender.logfile.File=target/spring.log  
+   log4j.appender.logfile.layout=org.apache.log4j.PatternLayout  
+   log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n  
+   ```
+
+3. 创建客户端，新建**zktest**java测试类，内容如下
+
+   ```
+   private static String connectString =
+    "hadoop102:2181,hadoop103:2181,hadoop104:2181";
+   	private static int sessionTimeout = 2000;
+   	private ZooKeeper zkClient = null;
+   
+   	@Before
+   	public void init() throws Exception {
+   
+   	zkClient = new ZooKeeper(connectString, sessionTimeout, new Watcher() {
+   
+   			@Override
+   			public void process(WatchedEvent event) {
+   
+   				// 收到事件通知后的回调函数（用户的业务逻辑）
+   				System.out.println(event.getType() + "--" + event.getPath());
+   
+   				// 再次启动监听
+   				try {
+   					zkClient.getChildren("/", true);
+   				} catch (Exception e) {
+   					e.printStackTrace();
+   				}
+   			}
+   		});
+   	}
+   
+   ```
+
+4. 
 
 # Hbase
 
