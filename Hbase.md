@@ -612,3 +612,36 @@ Master管理表结构ddl，zookeeper管理dml
 
 第一步，hbase安装包下载（http://hbase.apache.org/）
 
+目前只成功了单台伪分布式虚拟机，暂时不写安装部署
+
+错误来源，host文件配置问题，应该废除127.0.0.1，改用静态地址
+
+## HBase的Shell操作
+
+1. 进入HBase客户端命令行**hbase shell**（bin目录下）
+
+2. list查看数据库中的表
+
+3.  create ’xxx‘，’xxx‘创建表，第一个是表名，后面是列族
+
+4. 插入put ’表名‘，’Rowkey值‘，’列族：列名‘，’值‘
+
+5. 查看数据 scan ’表名‘，[{查询条件，比如STARTROW=>’值‘ ，STOP => '值'}]
+
+   或get ‘表名’,‘列族：列名’
+
+   ![image-20210228153348380](Hbase.assets/image-20210228153348380.png)
+
+6. 查看表结构 describe ‘表名’
+
+7. 更新字段 用put
+
+8. 统计数据行数用 count
+
+9. 删除 deleteall ‘表名’，‘值’ delete ‘表名’，‘值’，‘列族：列名”，删除之后，之前所有覆盖的数据都不再显示
+
+10. 清空 truncate ’表名‘
+
+11. 删除表 首先disable ’表名‘ 然后drop
+
+12. 表信息变更 alter ’表名‘，{NAME=>'列族'，VERSIONS=>值}
