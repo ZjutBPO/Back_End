@@ -645,3 +645,66 @@ Master管理表结构ddl，zookeeper管理dml
 11. 删除表 首先disable ’表名‘ 然后drop
 
 12. 表信息变更 alter ’表名‘，{NAME=>'列族'，VERSIONS=>值}
+
+## HBASE详细架构
+
+hbase依赖zookeeper、hdfs，需要事先启动
+
+HMaster管理HRegionServer
+
+HRegionServer有HLog、**HRegion**（一个server可以维护多个）
+
+HRegion中含有多个**Store**（列族）
+
+![image-20210301160334372](Hbase.assets/image-20210301160334372.png)
+
+### HBASE写流程
+
+put 
+
+客户端
+
+1、向zk请求meta表所在的RegionServer，zk返回meta的Regionserver地址
+
+2、向regionserver请求meta，返回meta，通过读namespace：table/rowkey，获取RS
+
+3、连接到server上，创建缓存memcache，发送put请求到对应server
+
+4、写入server
+
+
+
+![image-20210302001256459](Hbase.assets/image-20210302001256459.png)
+
+### MemStore Flush
+
+memstore达到刷写时机的时候，所在region的所有memstore都会刷写，同时，memgstore大小达到默认大小时，会阻止继续往memstore中写入数据，
+
+当rs中memstore的总大小达到一定值，region会按照所有memstore大小顺序刷写，直到总大小低于该值，同时也会阻止往memstore中数据的写入
+
+达到自动刷写时间会触发memstore flush
+
+wal文件数量超过一定值后，region按照时间顺序依次刷写直到wal中文件数量少于该值
+
+![image-20210302004117740](Hbase.assets/image-20210302004117740.png)
+
+### HBASE读流程
+
+1. client访问zk，得到meta表所在哪个regionserver
+2. 访问该rs，得到meta表，再根据读请求的表信息，查询出目标数据处在该rs中的哪个region中，将table的region信息和meta表位置信息缓存到客户端的meta cache
+3. 与目标rs通信
+4. 在block cache（读缓存）、memstore和storeFile中查询目标数据，将得到的数据合并
+5. 将从文件中查询到的block数据块缓存到block cache
+6. 合并完成的结果返回给客户端
+
+![image-20210302004140113](Hbase.assets/image-20210302004140113.png)
+
+### StoreFile Compaction和split
+
+compaction是为了减少hfile的数量，及时清理掉过期和删除的数据，主要有minor compaction和major compaction，前者只会合成临近的若干hfile，后者会将store下的所有hfile合成为一个hfile，并清理掉过期和删除的数据
+
+split是在时机合适的时候，将region拆分，例如store中的所有StoreFile总大小超过某一值(老版本)，或一个store下所有storefile的总大小超过Min(R^2 * 
+"hbase.hregion.memstore.flush.size",hbase.hregion.max.filesize")中的最小值（新版本）
+
+## HBase API
+
