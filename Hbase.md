@@ -701,7 +701,7 @@ wal文件数量超过一定值后，region按照时间顺序依次刷写直到wa
 
 ### StoreFile Compaction和split
 
-compaction是为了减少hfile的数量，及时清理掉过期和删除的数据，主要有minor compaction和major compaction，前者只会合成临近的若干hfile，后者会将store下的所有hfile合成为一个hfile，并清理掉过期和删除的数据
+compaction是为了减少hfile的数量，及时清理掉过期和删除的数据(合并时间戳)，主要有minor compaction和major compaction，前者只会合成临近的若干hfile，后者会将store下的所有hfile合成为一个hfile，并清理掉过期和删除的数据
 
 split是在时机合适的时候，将region拆分，例如store中的所有StoreFile总大小超过某一值(老版本)，或一个store下所有storefile的总大小超过Min(R^2 * 
 "hbase.hregion.memstore.flush.size",hbase.hregion.max.filesize")中的最小值（新版本）
