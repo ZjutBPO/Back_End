@@ -708,3 +708,49 @@ split是在时机合适的时候，将region拆分，例如store中的所有Stor
 
 ## HBase API
 
+首先是关于Hbase Api的基本操作问题，增删改查，核心是dml 和 ddl操作，这其中又是dml为主体
+
+具体内容参考仓库内Hbase_demo1项目中的TestAPI
+
+具体步骤为
+
+1. 与数据库建立连接，这一步事先写入，在运行java程序时就首先完成
+2. 对数据库的各类操作
+   1. 判断表是否存在（直接调用管理员对象自带的方法tableExists即可）
+   2. 创建表
+      1. 判断是否存在列族信息
+      2. 判断要创建的表是否存在
+      3. 创建表描述器（HTableDescriptor）
+      4. 创建列族描述器（HColumnDescriptor）添加需要的列族信息
+      5. 调用admin的方法createTable创建
+   3. 删除表
+      1. 判断表是否存在
+      2. 首先disable表
+      3. 调用admin的deleteTable方法删除表
+   4. 创建命名空间
+      1. 创建命名空间描述器
+      2. 创建命名空间
+   5. 向表中插入数据
+      1. 获取表对象
+      2. 创建put对象（对put对象添加各种属性）
+      3. 插入数据
+      4. 关闭连接
+   6. 获取数据（get）
+      1. 获取表对象
+      2. 创建get对象（对get对象添加各种数据，如列族，列名）
+      3. 获取数据result
+      4. 解析result获得Cell
+      5. 关闭连接
+   7. 获取数据（scan）
+      1. 获取表对象
+      2. 构建Scan对象
+      3. resultscanner扫描表
+      4. 解析resultscanner
+      5. 关闭连接
+   8. 删除数据
+      1. 获取表对象
+      2. 获取delete对象
+      3. 设置delete的列、列族（推荐使用addColumns，删除所有时间戳版本信息）
+      4. 删除对象
+      5. 关闭连接
+

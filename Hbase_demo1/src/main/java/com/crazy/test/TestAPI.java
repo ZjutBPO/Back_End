@@ -132,7 +132,7 @@ public class TestAPI {
         //5.关闭连接
         table.close();
 
-        Admin admin = connection.getAdmin();
+//        Admin admin = connection.getAdmin();
 
     }
 
@@ -191,7 +191,9 @@ public class TestAPI {
         //2.获取delete对象
         Delete delete = new Delete(Bytes.toBytes(rowKey));
         //2.1设置删除的列
+        //不加s的addcolumn只会删除最新时间戳的信息，不推荐使用
 //        delete.addColumn(Bytes.toBytes(cf),Bytes.toBytes(cn),1615037220830L);
+        //带s的addColumn会删除所有版本的信息，推荐使用
 //        delete.addColumns(Bytes.toBytes(cf),Bytes.toBytes(cn));
         //2.2设置删除的列族
         delete.addFamily(Bytes.toBytes(cf));
