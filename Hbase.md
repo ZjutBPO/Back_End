@@ -754,3 +754,5 @@ split是在时机合适的时候，将region拆分，例如store中的所有Stor
       4. 删除对象
       5. 关闭连接
 
+### MapReduce
+
