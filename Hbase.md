@@ -756,3 +756,78 @@ split是在时机合适的时候，将region拆分，例如store中的所有Stor
 
 ### MapReduce
 
+**首**先是系统自带的mr
+
+1. 创建一个表（例：fruit）
+
+2. 创建tsv文件上传到hdfs中（例：将fruit.tsv文件上传到hdfs / 目录下，命令（yarn jar /hbase/lib/hbase-server-版本号.jar importtsv -Dimporttsv.column=HBASE_ROW_KEY,info:name,info:color fruit hdfs://hadoop101:9000/ ））
+
+   解析来看就是yarn  jar  hbase-server.jar  import**tsv**  -Dimporttsv.column=HBASE_ROW_KEY,列族：列名，列族：列名 ...   表名  hdfs位置
+
+3. 查看导入是否成功，hbase shell中查看
+
+**自**定义的mr（将hdfs文件系统中的文件数据写入到fruit1表中）
+
+分步实现
+
+1. 首先是构建FruitMapper类用于读取fruit.tsv中的数据（context.write(k,v)）
+2. 构建FruitReducer类将读取到的文件中的数据经过筛选后写入fruit1表中
+3. 构建FruitDriver类题组装job（1.创建job对象|2.设置驱动类路径|3.设置Mapper输出类型|4.设置Reducer类|5.设置输入输出参数|6.提交任务）
+4. Driver中的main运行任务
+
+自定义的mr2（将fruit表中的数据迁移到表fruit2中）
+
+同样是构造一样的三个类，详情查看github back_end库中Hbase_demo代码
+
+# Hive
+
+## Hive基本概念
+
+​	由Facebook开源的用于解决海量结构化日志的数据统计，基于一个数据仓库工具，将结构化的数据文件映射为一张表，提供类SQL的查询功能，本质是将HQL转化为MapReduce函数
+
+ ![image-20210311114102588](Hbase.assets/image-20210311114102588.png)
+
+1. hive处理的数据存储在hdfs
+2. hive分析数据底层的实现是mapreduce
+3. 执行程序运行在yarn上
+
+**优点**
+
+1. 直接采用类sql语句
+2. 避免了去写mr语句
+3. 执行延迟搞，用于数据分析，对实时性要求不高
+4. 对于处理大数据有优势
+5. 支持用户自定义函数
+
+**缺点**
+
+1. 迭代式算法无法表达
+2. 数据挖掘方面不擅长，mr数据处理流程的限制，效率高的算法无法实现
+3. 效率低，调优比较难实现，粒度粗
+
+### 架构原理
+
+​	用户接口Client
+
+​		CLI（command-line interface）,JDBC/ODBC(jdbc访问hive)，WEBUI(浏览器访问hive)
+
+​	元数据：Metastore
+
+​		包括表名、表属数据库、表的拥有者、列/分区字段、表的类型、表的数据所在目录
+
+​		推荐使用mysql存储Metastore
+
+​	hadoop
+
+​		使用hdfs存储，mr计算
+
+​	驱动器：Driver
+
+​		解析器、编译器、优化器、执行器
+
+流程就是：hive提供一系列交互接口，接收用户指令，使用驱动器结合元数据，将指令翻译为MR，提交到Hadoop中执行，将结果返回到用户交互接口
+
+### 与数据库比较
+
+​	可以将hive理解为数据库，因为使用了类sql查询语言hql，
+

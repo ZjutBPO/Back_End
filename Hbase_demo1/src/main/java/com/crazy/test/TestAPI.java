@@ -147,7 +147,7 @@ public class TestAPI {
         //2.2、获取指定列名
         get.addColumn(Bytes.toBytes(cf),Bytes.toBytes(cn));
         //2.3.获取数据版本数
-        get.readAllVersions();
+        get.setMaxVersions();
         //3.获取数据
         Result result =table.get(get);
         //4解析result
