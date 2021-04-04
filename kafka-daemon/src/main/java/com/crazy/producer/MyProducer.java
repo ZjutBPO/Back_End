@@ -32,7 +32,7 @@ public class MyProducer {
         //创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
         for(int i = 0; i < 10; i++ ){
-            producer.send(new ProducerRecord<String, String>("bigdata", "jmh_" + i)).get();
+            producer.send(new ProducerRecord<String, String>("first","jmh", "jmh_" + i)).get();
         }
         Thread.sleep(100);
         //关闭资源

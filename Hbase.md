@@ -1,3 +1,10 @@
+# 集群配置
+
+hadoop 2.7.5
+zookeeper 3.5.9
+hbase 1.3.1
+hive 1.2.1
+
 # Shell
 
 sudo cat /etc/shells 可以看见六种shell解析器

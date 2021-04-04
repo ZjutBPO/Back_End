@@ -143,7 +143,7 @@ public class TestAPI {
         //2.创建get对象
         Get get = new Get(Bytes.toBytes(rowKey));
         //2.1、获取指定列族
-//        get.addFamily(Bytes.toBytes(cf));
+        get.addFamily(Bytes.toBytes(cf));
         //2.2、获取指定列名
         get.addColumn(Bytes.toBytes(cf),Bytes.toBytes(cn));
         //2.3.获取数据版本数
@@ -223,10 +223,10 @@ public class TestAPI {
 
     public static void main(String[] args) throws IOException {
         //1、测试表是否存在
-//        System.out.println("table exist"+isTableExist("stu"));
+//        System.out.println("table exist"+isTableExist("total"));
         //2、创建表测试
-//        createTable("1818:stu5","info1","info2");
-//        System.out.println("create success"+isTableExist("1818:stu5"));
+//        createTable("total","info");
+//        System.out.println("create success"+isTableExist("total"));
         //3、删除表测试
 //        dropTable("stu5");
 //        System.out.println("after delete table"+isTableExist("stu5"));
@@ -236,11 +236,11 @@ public class TestAPI {
         //5、创建数据测试
 //        putData("stu","1003","info1","name","jmh");
         //6.获取单行数据测试
-//        getData("stu","1008","info1","name");
+        getData("total","1","info","Age");
         //7.获取表数据测试（scan）
 //        scanTable("stu1");
         //8、删除测试
-        deleteData("stu","1009","info1","name");
+//        deleteData("stu","1009","info1","name");
         //关闭资源
 
         close();
